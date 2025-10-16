@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    build: .
+    image: elasticsearch:7.10.0
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  vector:
+    image: timberio/vector:latest
+    volumes:
+      - ./vector.toml:/etc/vector/vector.toml
+
+volumes:
+  esdata:
+    driver: local
